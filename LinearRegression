@@ -1,0 +1,53 @@
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load dataset
+dataset = pd.read_csv(r"C:\Users\Pazaryeri Converter\Downloads\ev_fiyatlari_buyuk.csv")
+
+# Prepare features and target variable
+X = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, -1].values
+
+print(X)
+print(y)
+
+# Split dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the model
+regression = LinearRegression()
+regression.fit(X_train, y_train)
+
+# Predict on test set
+y_pred = regression.predict(X_test)
+
+# Plot training set results
+plt.scatter(X_train, y_train, color='red')
+plt.plot(X_train, regression.predict(X_train), color='blue')
+plt.title('Area vs Price (Training set)')
+plt.xlabel('Area')
+plt.ylabel('Price')
+plt.show()
+
+# Plot test set results
+plt.scatter(X_test, y_test, color='red')
+plt.plot(X_train, regression.predict(X_train), color='blue')
+plt.title('Area vs Price (Test set)')
+plt.xlabel('Area')
+plt.ylabel('Price')
+plt.show()
+
+# Predict for a specific value
+area = 300  # Example area value
+predicted_price = regression.predict([[area]])
+print(f"Predicted price for an area of {area} is: {predicted_price[0]}")
+
+# Regression equation
+b1 = regression.coef_[0]
+b0 = regression.intercept_
+
+print(f"Final regression equation: y = {b0} + {b1} * x")
